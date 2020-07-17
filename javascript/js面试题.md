@@ -64,3 +64,22 @@ function getCom(arr) {
 }
 ```
 
+
+
+### 3.深拷贝
+
+```javascript
+function _cloneDeep(obj) {
+    if (obj === null) return null;
+    if (typeof obj !== "object") return obj;
+    if (obj instanceof RegExp) return new RegExp(obj);
+    if (obj instanceof Date) return new Date(obj);
+    let cloneObj = new obj.constructor;
+    for (let key in obj) {
+        if (!obj.hasOwnProperty(key)) break;
+        cloneObj[key] = _cloneDeep(obj[key]);
+    }
+    return cloneObj;
+}
+```
+
