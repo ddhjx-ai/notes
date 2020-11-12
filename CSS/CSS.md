@@ -204,3 +204,13 @@ display: -webkit-box;
 
 
 
+### 10.垂直居中
+
+```css
+/* leading-trim */
+h1 { 
+ text-edge: cap alphabetic;
+ leading-trim: both;
+}
+```
+

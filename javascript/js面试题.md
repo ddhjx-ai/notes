@@ -83,3 +83,17 @@ function _cloneDeep(obj) {
 }
 ```
 
+
+
+### 4. null 和 0 比较
+
+```javascript
+null > 0 // false
+null == 0 // false
+null >= 0 // true
+```
+
+**分析：**
+
+1. 当 null 和 0 进行 == 比较时，null为对象，而 0 为 Number类型，所以返回 false
+2. 当 null 和 0 进行大小比较时，null 转为number类型 0，所以返回 true
