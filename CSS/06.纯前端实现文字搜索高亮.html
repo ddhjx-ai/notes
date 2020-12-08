@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title></title>
+		<style type="text/css">
+			ui-overlay {
+				position: absolute;
+				color: red;
+				/* mix-blend-mode: overlay; */
+				z-index: 9;
+				font-weight: bold;
+				mix-blend-mode: screen;
+			}
+
+			p {
+				color: gray;
+			}
+		</style>
+	</head>
+	<body>
+		<p><input type="search" placeholder="输入内容回车搜索"></p>
+		<p id="target">上面输入框可以输入任意这段内容中出现的文字或者单词，然后回车确认，就会看到文字有高亮效果。但是，这种高亮效果既不是文字选中，也不是通过包裹标签元素实现的，直接覆盖在上面，然后通过叠加这种混合模式实现的，这里的overlay叠加混合模式适合浅色文字，如果是深色文字，可以使用其他混合模式实现，例如lighten。</p>
+
+		<script type="text/javascript">
+			var eleSearch = document.querySelector('input[type="search"]');
+			var eleTraget = document.querySelector('#target');
+
+			eleSearch.addEventListener('input', function() {
+				var text = eleTraget.textContent;
+
+				[].slice.call(document.querySelectorAll('ui-overlay')).forEach(function(overlay) {
+					overlay.remove();
+				});
+
+				// 匹配处理
+				var value = this.value.trim();
+				var length = value.length;
+
+				if (!length) {
+					return;
+				}
+
+				var arrMatchs = text.split(value);
+
+				if (arrMatchs.length > 1) {
+					var start = 0;
+					arrMatchs.forEach(function(parts, index) {
+						if (index == arrMatchs.length - 1) {
+							return;
+						}
+						var range = document.createRange();
+						start += parts.length;
+						range.setStart(eleTraget.firstChild, start);
+						range.setEnd(eleTraget.firstChild, start + length);
+
+						var bound = range.getBoundingClientRect();
+
+						var eleOverlay = document.createElement('ui-overlay');
+						document.body.appendChild(eleOverlay);
+
+						eleOverlay.style.left = bound.left + 'px';
+						eleOverlay.style.top = (bound.top + window.pageYOffset) + 'px';
+						eleOverlay.style.width = bound.width + 'px';
+						eleOverlay.style.height = bound.height + 'px';
+
+						start += length;
+					});
+				}
+			});
+		</script>
+	</body>
+</html>

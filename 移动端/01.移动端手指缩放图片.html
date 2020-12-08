@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>双指缩放</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+		<style>
+			html {
+				/* 禁用元素（及其不可滚动的后代）上的所有手势，以使用自己提供的拖放和缩放行为 */
+				touch-action: none;
+			}
+
+			p {
+				position: absolute;
+				background-color: #fff;
+				top: 40%;
+				pointer-events: none;
+			}
+
+			a {
+				position: absolute;
+				background: #cd0000;
+				color: #fff;
+				padding: 2px 5px;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- <a href="https://www.zhangxinxu.com/wordpress/?p=9461">返回文章</a> -->
+		<img id="image" src="https://imgservices-1252317822.image.myqcloud.com/image/20200610/8li8ffbofj.blob" alt="" width="375"
+		 height="667">
+
+		<p id="result"></p>
+
+		<script>
+			var eleImg = document.querySelector('#image');
+			var store = {
+				scale: 1
+			};
+			// 缩放处理
+			eleImg.addEventListener('touchstart', function(event) {
+				var touches = event.touches;
+				var events = touches[0];
+				var events2 = touches[1];
+
+				if (!events) {
+					return;
+				}
+
+				event.preventDefault();
+
+				// 第一个触摸点的坐标
+				store.pageX = events.pageX;
+				store.pageY = events.pageY;
+
+				store.moveable = true;
+
+				if (events2) {
+					store.pageX2 = events2.pageX;
+					store.pageY2 = events2.pageY;
+				}
+
+				store.originScale = store.scale || 1;
+			});
+			document.addEventListener('touchmove', function(event) {
+				if (!store.moveable) {
+					return;
+				}
+
+				event.preventDefault();
+
+				var touches = event.touches;
+				var events = touches[0];
+				var events2 = touches[1];
+
+				result.textContent = '触摸点数量：' + touches.length;
+
+				if (events2) {
+					// 双指移动
+					if (!store.pageX2) {
+						store.pageX2 = events2.pageX;
+					}
+					if (!store.pageY2) {
+						store.pageY2 = events2.pageY;
+					}
+
+					// 获取坐标之间的举例
+					var getDistance = function(start, stop) {
+						return Math.hypot(stop.x - start.x, stop.y - start.y);
+					};
+
+					var zoom = getDistance({
+							x: events.pageX,
+							y: events.pageY
+						}, {
+							x: events2.pageX,
+							y: events2.pageY
+						}) /
+						getDistance({
+							x: store.pageX,
+							y: store.pageY
+						}, {
+							x: store.pageX2,
+							y: store.pageY2
+						});
+
+					var newScale = store.originScale * zoom;
+					// 最大缩放比例限制
+					if (newScale > 3) {
+						newScale = 3;
+					}
+					// 记住使用的缩放值
+					store.scale = newScale;
+					// 图像应用缩放效果
+					eleImg.style.transform = 'scale(' + newScale + ')';
+
+					result.textContent = 'zoom: ' + zoom + ', apply scale: ' + newScale;
+				}
+			});
+
+			document.addEventListener('touchend', function() {
+				store.moveable = false;
+
+				delete store.pageX2;
+				delete store.pageY2;
+			});
+			document.addEventListener('touchcancel', function() {
+				store.moveable = false;
+
+				delete store.pageX2;
+				delete store.pageY2;
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title></title>
+	</head>
+	<body>
+		<button type="button" id="btn">点击</button>
+		<script type="text/javascript">
+			// 分别输出以下各场景下的 value 值，并简单说明一下 this 的指向。
+			function MAN() {};
+			MAN.prototype = {
+				value: "Jeson",
+				wakeUp: function(event) {
+					console.log(this.value);
+					console.log(this)
+				}
+			};
+			var man = new MAN; //实例化
+			var button = document.getElementById('btn');
+
+			// 1、第一种
+			// this指向button，this.value = ''
+			button.addEventListener('click', man.wakeUp, false);
+
+			// 2、第二种
+			// this指向button，this.value = ''
+			button.addEventListener('click', function() {
+				MAN.prototype.wakeUp.apply(this, arguments);
+			})
+
+			// 3、第三种
+			// this指向button，this.value = 'eileen,mark'
+			button.value = ['eileen', 'mark'];
+			button.addEventListener("click", function() {
+				MAN.prototype.wakeUp.apply(this, arguments);
+			}, false);
+			
+			/* 
+				以上三种情况的this都指向绑定点击事件的button，
+				this.value的值就是button.value的值
+			*/
+		</script>
+	</body>
+</html>

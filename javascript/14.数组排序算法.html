@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // 1、冒泡排序 时间复杂度O(n*n)
+    let bubbleSort = function (arr) {
+      let len = arr.length
+      for (let i = 0; i < len - 1; i++) {
+        for (let j = 0; j < len - 1 - i; j++) {
+          if (arr[j] > arr[j + 1]) {
+            [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]]
+          }
+        }
+      }
+      return arr
+    }
+    console.log(bubbleSort([3, 2, 5, 7, 4, 9]))
+
+    // 2、快速排序 时间复杂度O(nlogn)
+    let quickSort = function (arr) {
+      // 当数组长度为1时，结束递归
+      if (arr.length <= 1) return arr
+      // 获取中间值的索引
+      let index = Math.floor(arr.length / 2)
+      // 通过splice将中间值截取出来
+      let value = arr.splice(index, 1)[0],
+        leftArr = [],
+        rightArr = [];
+      for (let i = 0; i < arr.length; i++) {
+        if (value > arr[i]) {
+          leftArr.push(arr[i])
+        } else {
+          rightArr.push(arr[i])
+        }
+      }
+      return quickSort(leftArr).concat([value], quickSort(rightArr))
+    }
+    console.log(quickSort([8, 5, 2, 6, 4, 1, 3]))
+
+    // 3、插入排序 时间复杂度O(n*n)
+    let insetSort = function (arr) {
+      let len = arr.length; 
+      for (let i = 0; i < len; i++) { 
+        let preIndex = i - 1, 
+            cur = arr[i]; 
+        while (preIndex >= 0 && arr[preIndex] > cur) { 
+          arr[preIndex + 1] = arr[preIndex]; preIndex--; 
+        } 
+        arr[preIndex + 1] = cur;
+      } 
+      return arr
+    }
+
+    // 4、选择排序
+    let selectSort = function(arr) {
+      let len = arr.length,
+          temp = 0;
+      // 共需要排序len-1次
+      for(let i = 0; i < len -1; i++){
+        temp = i;
+        for(let j = i + 1; j<len; j++) {
+          if(arr[j] < arr[temp]){
+            temp = j;
+          }
+          // 保证第i个位最小值
+          if(temp !== i) {
+            [arr[i], arr[temp]] = [arr[temp], arr[i]]
+          }
+        }
+        return arr;
+      }
+    }
+  </script>
+</body>
+
+</html>
