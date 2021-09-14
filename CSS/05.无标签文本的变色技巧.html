@@ -41,6 +41,12 @@
 	</style>
 </head>
 <body>
+	<a href="http://somehost/somefile.zip" download="filename.zip">Download file</a>
+	<a href="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1380400117,1753524827&fm=27&gp=0.jpg?response-content-type=application/octet-stream" download="">下载</a>
+	 
+	<img src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1380400117,1753524827&fm=27&gp=0.jpg" alt="">
+	<a href="http://gys-public.oss-cn-beijing.aliyuncs.com/mall/1600825527424/1601284873116.jpg" target="_blank">下载</a>
+	<button type="button" id="button">点击</button>
 	<h4>原始标签效果</h4>
 	<ul>
 	    <li><input type="radio" name="item" checked>选项1</li> 
@@ -51,6 +57,34 @@
 	</ul>
 	
 	<script type="text/javascript">
+		  /*
+		   * imgsrc  图片地址
+		   * name 图片下载后的名字【包含图片后缀】 如"a.jpg"
+		   */
+			button.addEventListener('click',function() {
+				downloadIamge('https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1380400117,1753524827&fm=27&gp=0.jpg', 'aaaaa')
+			})
+		  function  downloadIamge(imgsrc, name) {
+		      //下载图片地址和图片名
+		      var image = new Image();
+		      // 解决跨域 Canvas 污染问题
+		      image.setAttribute("crossOrigin", "anonymous");
+		      image.onload = function() {
+		        var canvas = document.createElement("canvas");
+		        canvas.width = image.width;
+		        canvas.height = image.height;
+		        var context = canvas.getContext("2d");
+		        context.drawImage(image, 0, 0, image.width, image.height);
+		        var url = canvas.toDataURL("image/png"); //得到图片的base64编码数据
+		
+		        var a = document.createElement("a"); // 生成一个a元素
+		        var event = new MouseEvent("click"); // 创建一个单击事件
+		        a.download = name || "photo"; // 设置图片名称
+		        a.href = url; // 将生成的URL设置为a.href属性
+		        a.dispatchEvent(event); // 触发a的单击事件
+		      };
+		      image.src = imgsrc;
+		    }
 		/* document.querySelector('ul').addEventListener('click', function(event){
 			var target = event.target;
 			event.target.querySelector('input').checked = true;
