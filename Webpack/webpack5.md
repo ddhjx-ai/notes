@@ -453,3 +453,51 @@ module.exports = {
 }
 ```
 
+
+
+### 自定义plugin
+
+- webpack插件是一个具有apply方法的JavaScript对象。apply方法会被webpack  compiler调用，并且在整个编译生命周期都可以访问compiler对象。
+- 原理：
+  - 通过生命周期的钩子中挂载函数，来实现功能扩展。
+  - https://webpack.docschina.org/concepts/plugins/
+
+#### 1.webpack钩子函数
+
+| 钩子        | 描述                 | 类型            |
+| ----------- | -------------------- | --------------- |
+| environment | 环境准备好           | SyncHook        |
+| compile     | 编译开始             | SyncHook        |
+| compilation | 编译结束             | SyncHook        |
+| emit        | 打包资源到output之前 | AsyncSeriesHook |
+| afterEmit   | 打包资源到output之后 | AsyncSeriesHook |
+| done        | 打包完成             | SyncHook        |
+
+
+
+### 自定义loader
+
+- loader本质上就是一个 ESM 模块，它导出一个函数，在函数中对打包资源进行转换
+- 声明一个读取markdown（.md）文件内容的loader
+  - marked（将markdown语法转成html）
+  - loader-utils（接受loader的配置项）
+  - npm i marked loader-utils -D
+
+```javascript
+// 自定义 loader 的语法
+const {getOptions} = require('loader-utils')
+const marked = require('marked')
+
+// 自定义loader
+module.exports = function(source) {
+    // 获取 loader 配置项
+    const options = getOptions(this)
+    
+    // 对输出内容进行处理
+    const html = marked(source)
+    
+    // 返回个下一个 loader 处理
+    return html
+}
+```
+
