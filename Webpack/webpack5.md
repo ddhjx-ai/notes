@@ -435,3 +435,21 @@
 }
 ```
 
+####  3.webpack DefinePlugin
+
+- DefinePlugin
+  - 为配置注入全局变量
+  - 开发环境和生产环境的接口地址不同
+
+```javascript
+const webpack = ewquire('webpack')
+module.exports = {
+    plugins: [
+        new webpack.DefinePlugin({
+            //变量值要求的是一个代码片段
+            API_BASE_URL: JSON.stringify('https://api.example.com')
+        })
+    ]
+}
+```
+

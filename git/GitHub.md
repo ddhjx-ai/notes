@@ -11,6 +11,7 @@
 9. git commit <文件名> ： 将文件提交
 10. git log：查看提交记录
 11. git reflog：查看所有的历史记录（包括历史区回滚后的）
+12.  git update-git-for-windows：git升级
 
 ## 2. GIT版本控制系统
 
