@@ -553,3 +553,43 @@ optimization: {
   - 方案：有了Source Map后，可以快速定位问题代码
 - 如何生成Source Map
   - devtool：'映射模式'
+
+#### 映射模式（devtool的值）
+
+- 不同映射模式的报错定为效果和打包执行速度不同
+  - webpack4中，一共有13种不同的映射模式
+  - webpack5中，一共有26中不同的映射模式
+- webpack5映射模式选用（推荐）
+  - 开发环境：eval-cheap-module-source-map
+  - 生产环境：none|nosources-source-map
+
+
+
+### Tree Shaking（树摇）
+
+- Tree Shaking 的作用是删除未引用的代码
+  - return 后面的代码
+  - 只声明，未使用的代码
+  - 只引入，未使用的代码
+- 使用前提：
+  - 使用 ES Modules 规范的模块，才能执行 Tree Shaking
+  - Tree Shaking 依赖于 ES Modules 的静态语法分析
+- 如何使用：
+  - 生产模式：Tree Shaking 会自动开启
+  - 开发模式：
+    - usedExports
+      - optimization.usedExports（标记没用的代码）
+      - terser-webpack-plugin（删除没用到的代码）
+        - optimization.minimize：true（删除标记的代码）
+        - 该plugin插件在webpack4中需要单独安装（webpack5中无需安装）
+    - sideEffects
+      - 无副作用：如果一个模块单纯的导入导出变量，那它就无副作用
+      - 有副作用：如果一个模块还修改其他模块或者全局的一些东西，就有副作用
+        - 修改全局变量
+        - 在原型上扩展的方法
+        - css的引入
+      - sideEffects的作用：把未使用但无副作用的模块一并删除
+        - 对于没有副作用的模块，未使用代码不会被打包（相当于压缩了输出内容）
+- Tree Shaking 与 Source Map 存在兼容性问题
+  - devtool：source-map|inline-source-map|hidden-source-map|nosources-source-map（存在 Tree Shaking ，Source Map只能选择其中一种）
+  - eval 模式，将 js 输出为字符串（不是 ES Modules 规范），导致 Tree Shaking 失效
