@@ -383,7 +383,7 @@
 
 - 命令行中设置环境
   - webpack4：webpack --env.production
-  - webpack5：webpack --env production
+  - webpack5：打包命令：webpack --env production 运行命令：webpack serve --env production
 
 - webpack.config.js
 
@@ -501,3 +501,55 @@ module.exports = function(source) {
 }
 ```
 
+
+
+### 代码分离（Code Splitting）
+
+#### 1.多入口打包
+
+- entry（后面写成对象）
+  - {index: './src/index.js', about:'./src/about.js'}
+- output.filename（不能写成固定名称，否则报错）
+  - [name].bundle.js
+- HtmlWebpackPlugin（ 不同页面加载各自的bundle）
+  - chunks：['index'],  	index.html 加载 index.bundle.js
+  - chunks：['about'],     about.html 加载 about.bundle.js
+
+
+
+#### 2.提取公共模块
+
+```javascript
+optimization: {
+      splitChunks: {
+        chunks: 'all'
+      }
+    }
+```
+
+
+
+#### 3.动态导入
+
+- 懒加载
+  - 默认不加载，事件触发后才加载
+  - webpackChunkName："懒加载文件名称"
+  - ![image-20211207135832437](./images/懒加载.png)
+- 预加载
+  - 先等待其他资源加载，浏览器空闲时，再加载
+  - webpackPrefetch: true
+    - ![image-20211207135832437](./images/预加载.jpg)
+  - 缺点：在移动端有兼容性问题
+
+
+
+### 源码映射（Source Map）
+
+- 什么是Source Map
+  - 是一种源代码与构建后代码之间的映射技术
+  - 通过 .map 文件，将构建后的代码与源代码之间建立映射关系
+- 为什么要用Source Map
+  - 问题：构建后的代码，出了问题之后不好定位
+  - 方案：有了Source Map后，可以快速定位问题代码
+- 如何生成Source Map
+  - devtool：'映射模式'
