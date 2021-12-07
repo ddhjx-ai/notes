@@ -567,7 +567,7 @@ optimization: {
 
 ### Tree Shaking（树摇）
 
-- Tree Shaking 的作用是删除未引用的代码
+- **Tree Shaking 的作用是删除未引用且无副作用的代码**
   - return 后面的代码
   - 只声明，未使用的代码
   - 只引入，未使用的代码
@@ -590,6 +590,14 @@ optimization: {
         - css的引入
       - sideEffects的作用：把未使用但无副作用的模块一并删除
         - 对于没有副作用的模块，未使用代码不会被打包（相当于压缩了输出内容）
+      - <font color=red>**sideEffects使用：**</font>
+        - ① 开启副作用（webpack.config.js）
+          - optimization.sideEffects: true
+        - ② 标识代码是否有副作用（package.json)
+          - "sideEffects"
+            - false：所有代码都没有副作用（告诉webpack可以安全地删除未使用的 exports）
+            - true：所有代码都有副作用
+            - 数组：告诉webpack哪些模块有副作用，不删除
 - Tree Shaking 与 Source Map 存在兼容性问题
   - devtool：source-map|inline-source-map|hidden-source-map|nosources-source-map（存在 Tree Shaking ，Source Map只能选择其中一种）
   - eval 模式，将 js 输出为字符串（不是 ES Modules 规范），导致 Tree Shaking 失效
