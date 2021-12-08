@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>图片懒加载</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      width: 160px;
+      margin: 0 auto;
+    }
+
+    .imgBox {
+      margin-bottom: 200px;
+      width: 160px;
+      height: 160px;
+      background-color: #bbb;
+    }
+
+    img {
+      display: none;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- <div class="imgBox">
+      <img data-img='https://i2.hdslb.com/bfs/face/e2cf3e8b8b5c00b835084271c480e4d081daa755.jpg@160w_160h_1c_1s.jpg'
+        src="" alt="">
+    </div> -->
+  </div>
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+  <script>
+    /* let $imgBox = $('.imgBox');
+    let $img = $imgBox.children('img');
+    $(window).on('load scroll', function () {
+      // 图片加载过，就不重复加载
+      if($img.attr('isLoad') == 'true') {
+        return
+      }
+      let $H = $imgBox.outerHeight() + $imgBox.offset().top;
+      let $W = $(window).outerHeight() + $(window).scrollTop();
+      if($H <= $W) {
+        $img.attr('src', $img.attr('data-img'));
+        $img.on('load', function() {
+          $img.fadeIn();
+        })
+        // attr存储的属性值都是字符串格式
+        $img.attr('isLoad', true)
+      }
+    }) */
+
+    let $container = $('.container');
+    let $imgBoxs = null;
+    $window = $(window);
+    let str = ``;
+    new Array(20).fill(null).forEach(item => {
+      str += `<div class="imgBox">
+      <img data-img='https://i2.hdslb.com/bfs/face/e2cf3e8b8b5c00b835084271c480e4d081daa755.jpg@160w_160h_1c_1s.jpg'
+        src="" alt="">
+    </div>`
+    })
+    $container.html(str);
+
+    $imgBoxs = $('.container').children('.imgBox');
+    $window.on('load scroll', function () {
+      let $W = $(window).outerHeight() + $(window).scrollTop();
+      $imgBoxs.each((index, item) => {
+        let $item = $(item);
+        let $img = $item.children('img');
+        if ($item.attr('isLoad') == 'true') {
+          return
+        }
+        let $H = $item.outerHeight() + $item.offset().top;
+        if ($H <= $W) {
+          $img.attr('src', $img.attr('data-img'));
+          $img.on('load', function () {
+            $img.fadeIn();
+          })
+          $item.attr('isLoad', true)
+        }
+      })
+    })
+  </script>
+</body>
+
+</html>
