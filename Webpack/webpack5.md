@@ -597,7 +597,59 @@ optimization: {
           - "sideEffects"
             - false：所有代码都没有副作用（告诉webpack可以安全地删除未使用的 exports）
             - true：所有代码都有副作用
-            - 数组：告诉webpack哪些模块有副作用，不删除
+            - 数组：['./src/\*.js', '*.css']（告诉webpack哪些模块有副作用，不删除）
 - Tree Shaking 与 Source Map 存在兼容性问题
   - devtool：source-map|inline-source-map|hidden-source-map|nosources-source-map（存在 Tree Shaking ，Source Map只能选择其中一种）
   - eval 模式，将 js 输出为字符串（不是 ES Modules 规范），导致 Tree Shaking 失效
+
+
+
+### 缓存
+
+- Babel缓存
+  - cacheDirectory：true（第二次构建时，会读取之前的缓存）
+- 文件资源缓存
+  - 如果代码在缓存期内，代码更新后看不到实时效果
+  - 方案：将代码文件名称，设置为哈希名称，名称发生变化时，就加载最新的内容
+- webpack哈希值
+  - [hash:8]（每次webpack打包生成hash值，并限制hash的长度）
+  - [chunkhash]（不同chunk的hash值不同--同一次打包可能生成不同的chunk）
+  - [contenthash]（不同内容的hash值不同--同一个chunk中可能有不同的内容）
+
+
+
+### 模块解析（resolve）
+
+- resolve
+  - 配置模块解析的规则
+    - alias：配置模块加载的路径别名
+      - alias:{"@", resolve('src')}
+    - extensions: 引入模块时，可以省略哪些后缀
+      - extensions: ['.js', '.json', '.css']
+    - 其他配置项：https://www.webpackjs.com/configuration/resolve/
+
+
+
+### 排除依赖（externals）
+
+- externals
+  - 排除打包依赖项（防止对某个依赖项进行打包）
+  - 一般来说，一些成熟的第三方库，是不需要打包的。例如：jquery，我们可以再模块文件中直接引入 CDN 中的压缩
+  - https://www.webpackjs.com/comfiguration/externals
+
+
+
+### 模块联邦（Module Federation）
+
+- 多个应用可以共享一个模块（本地可以调远程的模块）
+  - https://webpack.js.org/concepts/module-federation
+- 模块提供方
+  - name：当前应用名称（供调用方使用）
+  - filename：打包后的文件名称（供调用方使用）
+  - exposes：暴露模块（相当于 export 导出）
+    - 模块名称：模块文件路径
+- 模块使用方
+  - remote：导入模块（相当于 import）
+    - 导入后的别名："[name]@远程地址/[filename]"
+  - import("导入后的别名/模块名称").then(.....)
+
